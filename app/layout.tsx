@@ -1,5 +1,7 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import '@arco-design/web-react/dist/css/arco.css'; // 添加 Arco Design 样式
 import "./globals.css";
 
 const geistSans = localFont({

@@ -1,0 +1,19 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl= env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Prediction {
+  id          Int      @id @default(autoincrement())
+  windSpeed   Float
+  temperature Float
+  forecast    String
+  createdAt   DateTime @default(now())
+}
