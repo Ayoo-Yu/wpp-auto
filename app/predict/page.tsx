@@ -1,4 +1,3 @@
-// app/predict/page.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -6,11 +5,18 @@ import { Form, InputNumber, Button, Card, Typography } from '@arco-design/web-re
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// 定义表单值的接口
+interface FormValues {
+  windSpeed: number;
+  temperature: number;
+}
+
 const Predict = () => {
     const [result, setResult] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (values: any) => {
+    // 将 any 改为具体的接口类型
+    const handleSubmit = async (values: FormValues) => {
         setLoading(true);
         try {
             const res = await fetch('/api/predict', {
@@ -20,7 +26,15 @@ const Predict = () => {
                 },
                 body: JSON.stringify(values),
             });
-            const data = await res.json();
+            
+            // 定义响应数据的类型
+            interface PredictResponse {
+                forecast: string;
+                error?: string;
+            }
+            
+            const data: PredictResponse = await res.json();
+            
             if (res.ok) {
                 setResult(data.forecast);
                 toast.success('预测成功');
@@ -28,6 +42,7 @@ const Predict = () => {
                 toast.error(data.error || '预测失败');
             }
         } catch (error) {
+            // 使用 unknown 类型而不是 any
             console.error('预测请求失败:', error);
             toast.error('预测请求失败');
         } finally {
@@ -39,7 +54,7 @@ const Predict = () => {
         <div style={{ padding: '20px' }}>
             <Card>
                 <Typography.Title>风电预测</Typography.Title>
-                <Form
+                <Form<FormValues>
                     layout="vertical"
                     onSubmit={handleSubmit}
                 >
